@@ -292,7 +292,6 @@ export default {
           document.ontouchmove = null;
           document.ontouchend = null;
         };
-        //return false不加的话可能导致黏连，就是拖到一个地方时div粘在鼠标上不下来，相当于onmouseup失效
         return false;
       };
     }
@@ -301,17 +300,18 @@ export default {
 </script>
 
 <style lang="scss">
+$white: #fff;
 $bg-white: #f5f6f7;
-
 $day-black: #333;
 $day-white: #f5f6f7;
-$white: #fff;
 $day-red: rgb(255, 45, 85);
-$dark-red: rgb(255, 68, 58);
 $day-text: #333;
+$dark-red: rgb(255, 68, 58);
+
 $day-text-secondary: #666;
 $dark-text: rgb(242, 242, 247);
 $dark-text-secondary: #979797;
+
 $shandow-dark: #dfe4ea;
 $shadow-tl: -4px -2px 4px 0px;
 $shadow-br: 4px 2px 6px 0px;
@@ -337,6 +337,7 @@ body {
   justify-content: center;
   align-items: center;
   padding: 1rem 3rem;
+  font-family:'Microsoft YaHei';
 }
 
 .container {
@@ -497,7 +498,6 @@ body {
 
 .container-day {
   background: $day-white;
-  // box-shadow: $shadow;
 }
 .container-night {
   background: #1a1a1a;

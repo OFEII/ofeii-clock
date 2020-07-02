@@ -16,7 +16,4 @@ export default {
 }
 </script>
 <style lang="scss">
-*{
-  font-family:'Microsoft YaHei';
-}
 </style>
