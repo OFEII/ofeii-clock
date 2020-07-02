@@ -2,32 +2,43 @@
   <!-- container -->
   <div class="container" :class="[isNight ? 'container-night' : 'container-day','container']">
     <!-- clock-day/night -->
-    <div  @click="timeStop()" :class="[isNight ? 'clock-night' : 'clock-day','ofeii-clock',(isNight&&isTimeStop)?'stop-night':'',(!isNight&&isTimeStop)?'stop-day':'']">
+    <div
+      @click="timeStop()"
+      :class="[isNight ? 'clock-night' : 'clock-day','ofeii-clock',(isNight&&isTimeStop)?'stop-night':'',(!isNight&&isTimeStop)?'stop-day':'']"
+    >
       <!-- hour时针-->
-      <div class="hour"  >
-        <div class="hr" 
-          v-drag="{set:setDigitalHour}" 
-          draggable="false" 
-          id="clock-hour" 
-          :style="{transform: `rotateZ(${hourDeg}deg)`}">
+      <div class="hour">
+        <div
+          class="hr"
+          v-drag="{set:setDigitalHour}"
+          draggable="false"
+          id="clock-hour"
+          :style="{transform: `rotateZ(${hourDeg}deg)`}"
+        >
+          <span class="tail hr-tail"></span>
         </div>
       </div>
       <!-- min分针 -->
-      <div class="min" >
-        <div class="mn" 
-          v-drag="{set:setDigitalMin}" 
-          draggable="false"  
-          id="clock-min" 
-          :style="{transform: `rotateZ(${minDeg}deg)`}">
-          </div>
+      <div class="min">
+        <div
+          class="mn"
+          v-drag="{set:setDigitalMin}"
+          draggable="false"
+          id="clock-min"
+          :style="{transform: `rotateZ(${minDeg}deg)`}"
+        >
+          <span class="tail mn-tail"></span>
+        </div>
       </div>
       <!-- sec秒针 -->
-      <div class="sec" >
-        <div class="sc" 
-          v-drag="{set:setDigitalSec}" 
-          draggable="false"  
-          id="clock-sec" 
-          :style="{transform: `rotateZ(${secDeg}deg)`}"></div>
+      <div class="sec">
+        <div
+          class="sc"
+          v-drag="{set:setDigitalSec}"
+          draggable="false"
+          id="clock-sec"
+          :style="{transform: `rotateZ(${secDeg}deg)`}"
+        ></div>
       </div>
     </div>
     <!-- digital-clock 电子时钟 -->
@@ -66,7 +77,7 @@ export default {
       // 控制是否停止时间停止的状态
       isTimeStop: false,
       // 控制夜晚()或者白天的状态
-      isNight: false,
+      isNight: false
     };
   },
   created() {
@@ -84,14 +95,14 @@ export default {
       this.digitalSec = (nowTime.getSeconds() + "").padStart(2, "0");
     },
     // 个位数补零
-    zeroPadded(num){
-      return num < 10 ? `0${num}` : num
-    },
+    // zeroPadded(num){
+    //   return num < 10 ? `0${num}` : num
+    // },
     // 秒针+1,改变指针角度并判断夜晚或白天的状态
     clock() {
       this.digitalSec = (+this.digitalSec + 1 + "").padStart(2, "0");
       this.resetTimeDeg();
-      this.isMode()
+      this.isMode();
     },
     // 模拟指针转动:每秒运行一次clock()
     timeRun() {
@@ -102,16 +113,16 @@ export default {
     // 点击时钟表盘进行切换(暂停态 <==> 停止态)
     timeStop() {
       this.isTimeStop = !this.isTimeStop;
-      this.isTimeStop ? clearInterval(this.timerunning) : this.timeRun()
+      this.isTimeStop ? clearInterval(this.timerunning) : this.timeRun();
     },
     // 重置时间指针转动的角度
     resetTimeDeg() {
       // this.hourDeg =(this.digitalHour / 12) * 360 + (this.digitalMin / 60) * 30;
       // this.minDeg = (this.digitalMin / 60) * 360 + (this.digitalSec / 60) * 6;
       // this.secDeg = (this.digitalSec / 60) * 360;
-      this.hourDeg =(this.digitalHour *30)+ (this.digitalMin / 2);
-      this.minDeg = (this.digitalMin *6)  + (this.digitalSec / 10);
-      this.secDeg = (this.digitalSec *6) ;      
+      this.hourDeg = this.digitalHour * 30 + this.digitalMin / 2;
+      this.minDeg = this.digitalMin * 6 + this.digitalSec / 10;
+      this.secDeg = this.digitalSec * 6;
       this.formatHour();
       this.formatMin();
       this.formatSec();
@@ -119,18 +130,27 @@ export default {
     // 时针格式化
     formatHour() {
       if (this.digitalHour >= 24) {
-        this.digitalHour = ((+this.digitalHour)%24 +'').padStart(2, "0");
+        this.digitalHour = ((+this.digitalHour % 24) + "").padStart(2, "0");
       } else if (this.digitalHour < 0) {
-        this.digitalHour = (+this.digitalHour + Math.round(Math.abs(this.digitalHour)/24+1)*24 + "").padStart(2, "0");
+        this.digitalHour = (
+          +this.digitalHour +
+          (Math.round(this.digitalHour) / 12 + 1) * 12 +
+          ""
+        ).padStart(2, "0");
       }
     },
     // 分针格式化
     formatMin() {
+      // if(this.digitalMin >=60){
+      //   this.digitalMin = (+this.digitalMin%60+'').padStart(2, "0");
+      //   // this.digitalHour = (+this.digitalHour + 1 + "").padStart(2, "0");
+      // }
       if (this.digitalMin >= 60) {
         this.digitalMin = ((+this.digitalMin % 60) + "").padStart(2, "0");
         this.digitalHour = (+this.digitalHour + 1 + "").padStart(2, "0");
       } else if (this.digitalMin < 0) {
-        this.digitalMin = (+this.digitalMin + Math.round(Math.abs(this.digitalHour)/60+1)*60 + "").padStart(2, "0");
+        this.digitalMin = (
+          +this.digitalMin +(Math.round(this.digitalHour) / 60 + 1) * 60 +"").padStart(2, "0");
         this.digitalHour = (+this.digitalHour - 1 + "").padStart(2, "0");
       }
     },
@@ -140,7 +160,7 @@ export default {
         this.digitalSec = ((+this.digitalSec % 60) + "").padStart(2, "0");
         this.digitalMin = (+this.digitalMin + 1 + "").padStart(2, "0");
       } else if (this.digitalSec < 0) {
-        this.digitalSec = (+this.digitalSec + Math.round(Math.abs(this.digitalHour)/60+1)*60 + "").padStart(2, "0");
+        this.digitalSec = (+this.digitalSec +(Math.round(this.digitalHour) / 60 + 1) * 60 +"").padStart(2, "0");
         this.digitalMin = (+this.digitalMin - 1 + "").padStart(2, "0");
       }
     },
@@ -175,38 +195,51 @@ export default {
       this.resetTimeDeg();
     },
     // 拖拽时针改变电子表盘的digitalHour
-    setDigitalHour(deg){
-      this.hourDeg = ~~(this.hourDeg - deg)
-      this.digitalHour = (~~((this.hourDeg - this.digitalMin/2)/30)+'').padStart(2, "0");
+    setDigitalHour(deg) {
+      this.hourDeg = Math.round(this.hourDeg - deg);
+      this.digitalHour = (
+        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ""
+      ).padStart(2, "0");
       this.formatHour();
-      this.$forceUpdate()
+      this.$forceUpdate();
     },
     // 拖拽分针改变电子表盘的digitalMin
-    setDigitalMin(deg){
-      this.minDeg = ~~(this.minDeg - deg)
-      this.digitalMin = (~~((this.minDeg - this.digitalSec/10)/6)+'').padStart(2, "0");
-      this.digitalHour = (~~((this.hourDeg - this.digitalMin/2)/30)+'').padStart(2, "0");
-      console.log(this.digitalMin)
+    setDigitalMin(deg) {
+      this.minDeg = Math.round(this.minDeg - deg);
+      this.digitalMin = (
+        Math.round((this.minDeg - +this.digitalSec / 10) / 6) + ""
+      ).padStart(2, "0");
+      this.digitalHour = (
+        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ""
+      ).padStart(2, "0");
+      console.log(this.digitalMin);
       this.formatHour();
       this.formatMin();
-      this.$forceUpdate()
+      this.$forceUpdate();
     },
     // 拖拽秒针改变电子表盘的digitalSec
-    setDigitalSec(deg){
-      this.secDeg = ~~(this.secDeg - deg)
-      this.digitalSec = (~~(this.secDeg /6)+'').padStart(2, "0");
-      this.digitalMin = (~~((this.minDeg - this.digitalSec/10)/6)+'').padStart(2, "0");
-      this.digitalHour = (~~((this.hourDeg - this.digitalMin/2)/30)+'').padStart(2, "0");
+    setDigitalSec(deg) {
+      this.secDeg = Math.round(this.secDeg - deg);
+      this.digitalSec = (Math.round(this.secDeg / 6) + "").padStart(2, "0");
+      this.digitalMin = (
+        Math.round((this.minDeg - +this.digitalSec / 10) / 6) + ""
+      ).padStart(2, "0");
+      this.digitalHour = (
+        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ""
+      ).padStart(2, "0");
       this.formatHour();
       this.formatMin();
       this.formatSec();
-      this.$forceUpdate()
+      this.$forceUpdate();
     },
     // 判断夜晚或白天模式
-    isMode(){
-      let numDh = +this.digitalHour
-      this.isNight = ((numDh >=18 && numDh<=23)||(numDh>=0&&numDh<=6)) ? true : false
-    },
+    isMode() {
+      let numDh = +this.digitalHour;
+      this.isNight =
+        (numDh >= 22 && numDh <= 23) || (numDh >= 0 && numDh <= 6)
+          ? true
+          : false;
+    }
   },
   directives: {
     // 自定义指令 v-drag，el当前元素
@@ -217,19 +250,18 @@ export default {
         let disX = e.clientX - el.offsetLeft;
         let disY = e.clientY - el.offsetTop;
         let rect = e.target.getBoundingClientRect();
-        let centerX = rect.left + rect.width / 2
-        let centerY = rect.top + rect.width / 2
+        let centerX = rect.left + rect.width / 2;
+        let centerY = rect.top + rect.width / 2;
         document.onmousemove = function(e) {
           //鼠标移动，计算其移动距离
-          let l = e.clientX - centerX- disX;
-          let t = centerY-e.clientY- disY;
+          let l = e.clientX - centerX - disX;
+          let t = centerY - e.clientY - disY;
           // 计算其旋转角度
-          let deg = Math.atan2(t, l) / Math.PI*1.5;
+          let deg = (Math.atan2(t, l) / Math.PI) * 1.5;
           // 旋转
-          el.style.transform = `rotateZ(${deg}deg)`
+          el.style.transform = `rotateZ(${deg}deg)`;
           // set传出deg给data
-          binding.value.set(deg)
-
+          binding.value.set(deg);
         };
         document.onmouseup = function(e) {
           document.onmousemove = null;
@@ -243,19 +275,18 @@ export default {
         let disX = e.clientX - el.offsetLeft;
         let disY = e.clientY - el.offsetTop;
         let rect = e.target.getBoundingClientRect();
-        let centerX = rect.left + rect.width / 2
-        let centerY = rect.top + rect.width / 2
+        let centerX = rect.left + rect.width / 2;
+        let centerY = rect.top + rect.width / 2;
         document.ontouchmove = function(e) {
           //鼠标移动。计算鼠标移动距离
-          let l = e.clientX - centerX- disX;
-          let t = centerY-e.clientY- disY;
+          let l = e.clientX - centerX - disX;
+          let t = centerY - e.clientY - disY;
           // antan2计算出拖拽角度
-          let deg = Math.atan2(t, l) / Math.PI*1.5;
+          let deg = (Math.atan2(t, l) / Math.PI) * 1.5;
           // 拖拽旋转
-          el.style.transform = `rotateZ(${deg}deg)`
+          el.style.transform = `rotateZ(${deg}deg)`;
           // set传出deg
-          binding.value.set(deg)
-
+          binding.value.set(deg);
         };
         document.ontouchend = function(e) {
           document.ontouchmove = null;
@@ -265,20 +296,26 @@ export default {
         return false;
       };
     }
-  },
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+$bg-white: #f5f6f7;
 
-$white-day: #f5f6f7;
+$day-black: #333;
+$day-white: #f5f6f7;
 $white: #fff;
-$red: #f00;
-$black: #4a5568;
-$dark: #DFE4EA;
+$day-red: rgb(255, 45, 85);
+$dark-red: rgb(255, 68, 58);
+$day-text: #333;
+$day-text-secondary: #666;
+$dark-text: rgb(242, 242, 247);
+$dark-text-secondary: #979797;
+$shandow-dark: #dfe4ea;
 $shadow-tl: -4px -2px 4px 0px;
 $shadow-br: 4px 2px 6px 0px;
-$shadow: $shadow-tl $white, $shadow-br $dark;
+$shadow: $shadow-tl $white, $shadow-br $shandow-dark;
 
 @mixin hand {
   content: "";
@@ -286,6 +323,20 @@ $shadow: $shadow-tl $white, $shadow-br $dark;
   height: 5rem;
   border-radius: 8px;
   z-index: 10;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $bg-white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 3rem;
 }
 
 .container {
@@ -311,8 +362,8 @@ $shadow: $shadow-tl $white, $shadow-br $dark;
     &:before {
       content: "";
       position: absolute;
-      height: 1rem;
-      width: 1rem;
+      height: 0.4rem;
+      width: 0.4rem;
       border-radius: 50%;
       z-index: 10000;
     }
@@ -332,37 +383,52 @@ $shadow: $shadow-tl $white, $shadow-br $dark;
     }
     .hour,
     .hr {
-      height: 11.875rem;
-      width: 8px;
+      height: 10rem;
+      width: 6px;
     }
     .min,
     .mn {
-      height: 9.375rem;
-      width: 4px;
+      height: 13.5rem;
+      width: 5px;
     }
     .sec,
     .sc {
-      height: 11.25rem;
+      height: 16rem;
       width: 2px;
     }
     .hr:before {
       @include hand;
-      transform: translateY(36%);
+      height: 5rem;
       transform-origin: 0% 50% 0;
-
+      z-index: 13;
     }
     .mn:before {
       @include hand;
-      height: 5.625rem;
+      height: 7rem;
       width: 4px;
       transform-origin: 0% 50% 0;
+      z-index: 12;
     }
     .sc:before {
       @include hand;
-      height: 6.25rem;
+      height: 9rem;
       width: 2px;
       z-index: 11;
       transform-origin: 0% 50% 0;
+    }
+    .tail {
+      background: #fff;
+      height: 1rem;
+      position: absolute;
+      top: 2px;
+      border-radius: 8px;
+      z-index: 100;
+    }
+    .hr-tail {
+      width: 2px;
+    }
+    .mn-tail {
+      width: 1px;
     }
   }
   .digital-clock {
@@ -382,100 +448,117 @@ $shadow: $shadow-tl $white, $shadow-br $dark;
   }
 }
 
-.digit-day{
-  background-color: $white-day;
+.digit-day {
+  background-color: $day-white;
   box-shadow: $shadow;
 }
 
-.digit-night{
+.digit-night {
   color: #f2f2f2;
   background-color: #1a1a1a;
   box-shadow: -2px -2px 3px 0 rgba(255, 255, 255, 0.06), 2px 2px 6px 0 black;
-
 }
 .btn-base {
-  color: #333;
+  color: $day-text-secondary;
   height: 2rem;
   width: 4rem;
   position: relative;
   border-radius: 4px;
   margin: 1rem 0;
   font-size: 1.5rem;
-  background-color: $white-day;
+  background-color: $day-white;
   outline: none;
   border: none;
   box-shadow: $shadow;
   cursor: pointer;
+  font-weight: bold;
 }
 
-.btn-day{
-  color: #333;
-  background-color: $white-day;
+.btn-day {
+  color: $day-text-secondary;
+  background-color: $day-white;
   box-shadow: $shadow;
 }
 
-.btn-day:focus{
-  box-shadow: 2px 2px 2px 0px $dark inset, -2px -2px 2px 0px $white inset;
+.btn-day:focus {
+  box-shadow: 2px 2px 2px 0px $shandow-dark inset,
+    -2px -2px 2px 0px $white inset;
 }
 
-.btn-night{
-  color: #f2f2f2;
+.btn-night {
+  color: $dark-text-secondary;
   background-color: #1a1a1a;
   box-shadow: -2px -2px 3px 0 rgba(255, 255, 255, 0.06), 2px 2px 6px 0 black;
 }
 
-.btn-night:focus{
+.btn-night:focus {
   box-shadow: 2px 2px 2px 0px #262626 inset, -2px -2px 2px 0px #000 inset;
 }
 
-.container-day{
-  background: $white-day;
+.container-day {
+  background: $day-white;
   // box-shadow: $shadow;
 }
-.container-night{
+.container-night {
   background: #1a1a1a;
-  box-shadow: 4px 2px 6px 0px rgba(0,0,0,.8);
+  box-shadow: 4px 2px 6px 0px rgba(0, 0, 0, 0.8);
 }
 
-.clock-night{
+.clock-night {
   border: 4px solid #151515;
-  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.91), inset 7px 7px 15px rgba(14, 14, 14, 0.82), 4px 8px 15px #060606, -1px 0px 8px rgba(255, 255, 255, 0.4);
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.91),
+    inset 7px 7px 15px rgba(14, 14, 14, 0.82), 4px 8px 15px #060606,
+    -1px 0px 8px rgba(255, 255, 255, 0.4);
   &:before {
-    background: #fafafa;
+    background: $dark-text;
+    border: 2px solid $dark-red;
+  }
+  span {
+    .tail {
+      background: $dark-text;
+    }
   }
   .hr:before {
-    background: $red;
+    background: $dark-text;
+    box-shadow: -1px 1px 6px 0 rgba(255, 255, 255, 0.4);
   }
   .mn:before {
-    background: #fff;
+    background: $dark-text;
+    box-shadow: -1px 1px 6px 0 rgba(255, 255, 255, 0.4);
   }
   .sc:before {
-    background: #fff;
+    background: $dark-red;
+    box-shadow: -1px 1px 6px 0 rgba(255, 255, 255, 0.4);
   }
-
 }
-.clock-day{
-  background-color: $white-day;
-  box-shadow:  inset 0.2rem 0.2rem 0.5rem #fff, inset -0.2rem -0.2rem 0.5rem rgba(195, 193, 198, 0.9), 0.3rem 0.3rem 0.5rem rgba(195, 193, 198, 0.9), -0.2rem -0.2rem 0.4rem #fff;
+.clock-day {
+  background-color: $day-white;
+  box-shadow: inset 0.2rem 0.2rem 0.5rem #fff,
+    inset -0.2rem -0.2rem 0.5rem rgba(195, 193, 198, 0.9),
+    0.3rem 0.3rem 0.5rem rgba(195, 193, 198, 0.9), -0.2rem -0.2rem 0.4rem #fff;
   &:before {
     background: #f3f3f3;
+    border: 2px solid $day-red;
   }
   .hr:before {
-    background: $red;
+    background: $day-black;
+    box-shadow: -2px 2px 10px 0 rgba(51, 51, 51, 0.4);
   }
   .mn:before {
-    background: #333;
+    background: $day-black;
+    box-shadow: -2px 2px 10px 0 rgba(51, 51, 51, 0.4);
   }
   .sc:before {
-    background: #5a5a5a;
+    background: $day-red;
+    box-shadow: -1px 1px 6px 0 rgba(255, 0, 0, 0.4);
   }
 }
 
-.stop-night{
+.stop-night {
   box-shadow: -2px -2px 3px 0 rgba(255, 255, 255, 0.06), 2px 2px 6px 0 black;
 }
 
-.stop-day{
-  box-shadow:3px 3px 6px 0px #DFE4EA inset, -3px -3px 6px 0px #ffffff inset;
+.stop-day {
+  box-shadow: 3px 3px 6px 0px #dfe4ea inset, -3px -3px 6px 0px $dark-text inset;
 }
 </style>
