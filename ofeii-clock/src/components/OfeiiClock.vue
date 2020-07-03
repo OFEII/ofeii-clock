@@ -130,27 +130,18 @@ export default {
     // 时针格式化
     formatHour() {
       if (this.digitalHour >= 24) {
-        this.digitalHour = ((+this.digitalHour % 24) + "").padStart(2, "0");
+        this.digitalHour = ((+this.digitalHour)%24 +'').padStart(2, "0");
       } else if (this.digitalHour < 0) {
-        this.digitalHour = (
-          +this.digitalHour +
-          (Math.round(this.digitalHour) / 12 + 1) * 12 +
-          ""
-        ).padStart(2, "0");
+        this.digitalHour = (+this.digitalHour + Math.round(Math.abs(this.digitalHour)/24+1)*24 + "").padStart(2, "0");
       }
     },
     // 分针格式化
     formatMin() {
-      // if(this.digitalMin >=60){
-      //   this.digitalMin = (+this.digitalMin%60+'').padStart(2, "0");
-      //   // this.digitalHour = (+this.digitalHour + 1 + "").padStart(2, "0");
-      // }
       if (this.digitalMin >= 60) {
         this.digitalMin = ((+this.digitalMin % 60) + "").padStart(2, "0");
         this.digitalHour = (+this.digitalHour + 1 + "").padStart(2, "0");
       } else if (this.digitalMin < 0) {
-        this.digitalMin = (
-          +this.digitalMin +(Math.round(this.digitalHour) / 60 + 1) * 60 +"").padStart(2, "0");
+        this.digitalMin = (+this.digitalMin + Math.round(Math.abs(this.digitalHour)/60+1)*60 + "").padStart(2, "0");
         this.digitalHour = (+this.digitalHour - 1 + "").padStart(2, "0");
       }
     },
@@ -160,7 +151,7 @@ export default {
         this.digitalSec = ((+this.digitalSec % 60) + "").padStart(2, "0");
         this.digitalMin = (+this.digitalMin + 1 + "").padStart(2, "0");
       } else if (this.digitalSec < 0) {
-        this.digitalSec = (+this.digitalSec +(Math.round(this.digitalHour) / 60 + 1) * 60 +"").padStart(2, "0");
+        this.digitalSec = (+this.digitalSec + Math.round(Math.abs(this.digitalHour)/60+1)*60 + "").padStart(2, "0");
         this.digitalMin = (+this.digitalMin - 1 + "").padStart(2, "0");
       }
     },
