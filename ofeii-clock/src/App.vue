@@ -20,5 +20,16 @@ body{
   justify-content: center;
   align-items: center;
   padding: 1rem 3rem;
+  //fixed blue rect in android
+  -webkit-tap-highlight-color:rgba(0,0,0,0); 
+}
+
+//fixed blue rect in ios/wechat 
+a:focus,
+input:focus,
+p:focus,
+div:focus{
+-webkit-tap-highlight-color:rgba(0,0,0,0);
+-webkit-user-modify:read-write-plaintext-only;
 }
 </style>
