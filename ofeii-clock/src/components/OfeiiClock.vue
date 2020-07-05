@@ -64,230 +64,238 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       // 指针转动角度
       secDeg: 0,
       minDeg: 0,
       hourDeg: 0,
       // 电子时钟(时 分 秒) digital-Time(Hour, Min ,Sec)
-      digitalHour: "",
-      digitalMin: "",
-      digitalSec: "",
+      digitalHour: '',
+      digitalMin: '',
+      digitalSec: '',
       // 控制是否停止时间停止的状态
       isTimeStop: false,
       // 控制夜晚()或者白天的状态
       isNight: false
-    };
+    }
   },
-  created() {
-    this.timeRun();
-    this.timeInit();
+  created () {
+    this.timeRun()
+    this.timeInit()
   },
   methods: {
     // 时间初始化:获取本地的时间并将其转为string，并用padStart()补全
-    timeInit() {
-      const deg = 6;
-      let nowTime = new Date();
-      // console.log(nowTime.getHours())
-      this.digitalHour = (nowTime.getHours() + "").padStart(2, "0");
-      this.digitalMin = (nowTime.getMinutes() + "").padStart(2, "0");
-      this.digitalSec = (nowTime.getSeconds() + "").padStart(2, "0");
+    timeInit () {
+      const nowTime = new Date()
+      this.digitalHour = (nowTime.getHours() + '').padStart(2, '0')
+      this.digitalMin = (nowTime.getMinutes() + '').padStart(2, '0')
+      this.digitalSec = (nowTime.getSeconds() + '').padStart(2, '0')
     },
     // 个位数补零
     // zeroPadded(num){
     //   return num < 10 ? `0${num}` : num
     // },
     // 秒针+1,改变指针角度并判断夜晚或白天的状态
-    clock() {
-      this.digitalSec = (+this.digitalSec + 1 + "").padStart(2, "0");
-      this.resetTimeDeg();
-      this.isMode();
+    clock () {
+      this.digitalSec = (+this.digitalSec + 1 + '').padStart(2, '0')
+      this.resetTimeDeg()
+      this.isMode()
     },
     // 模拟指针转动:每秒运行一次clock()
-    timeRun() {
+    timeRun () {
       this.timerunning = setInterval(() => {
-        this.clock();
-      }, 1000);
+        this.clock()
+      }, 1000)
     },
     // 点击时钟表盘进行切换(暂停态 <==> 停止态)
-    timeStop() {
-      this.isTimeStop = !this.isTimeStop;
-      this.isTimeStop ? clearInterval(this.timerunning) : this.timeRun();
+    timeStop () {
+      this.isTimeStop = !this.isTimeStop
+      this.isTimeStop ? clearInterval(this.timerunning) : this.timeRun()
     },
     // 重置时间指针转动的角度
-    resetTimeDeg() {
+    resetTimeDeg () {
       // this.hourDeg =(this.digitalHour / 12) * 360 + (this.digitalMin / 60) * 30;
       // this.minDeg = (this.digitalMin / 60) * 360 + (this.digitalSec / 60) * 6;
       // this.secDeg = (this.digitalSec / 60) * 360;
-      this.hourDeg = this.digitalHour * 30 + this.digitalMin / 2;
-      this.minDeg = this.digitalMin * 6 + this.digitalSec / 10;
-      this.secDeg = this.digitalSec * 6;
-      this.formatHour();
-      this.formatMin();
-      this.formatSec();
+      this.hourDeg = this.digitalHour * 30 + this.digitalMin / 2
+      this.minDeg = this.digitalMin * 6 + this.digitalSec / 10
+      this.secDeg = this.digitalSec * 6
+      this.formatHour()
+      this.formatMin()
+      this.formatSec()
     },
     // 时针格式化
-    formatHour() {
+    formatHour () {
       if (this.digitalHour >= 24) {
-        this.digitalHour = ((+this.digitalHour)%24 +'').padStart(2, "0");
+        this.digitalHour = ((+this.digitalHour % 24) + '').padStart(2, '0')
       } else if (this.digitalHour < 0) {
-        this.digitalHour = (+this.digitalHour + Math.round(Math.abs(this.digitalHour)/24+1)*24 + "").padStart(2, "0");
+        this.digitalHour = (
+          +this.digitalHour +
+          Math.round(Math.abs(this.digitalHour) / 24 + 1) * 24 +
+          ''
+        ).padStart(2, '0')
       }
     },
     // 分针格式化
-    formatMin() {
+    formatMin () {
       if (this.digitalMin >= 60) {
-        this.digitalMin = ((+this.digitalMin % 60) + "").padStart(2, "0");
-        this.digitalHour = (+this.digitalHour + 1 + "").padStart(2, "0");
+        this.digitalMin = ((+this.digitalMin % 60) + '').padStart(2, '0')
+        this.digitalHour = (+this.digitalHour + 1 + '').padStart(2, '0')
       } else if (this.digitalMin < 0) {
-        this.digitalMin = (+this.digitalMin + Math.round(Math.abs(this.digitalHour)/60+1)*60 + "").padStart(2, "0");
-        this.digitalHour = (+this.digitalHour - 1 + "").padStart(2, "0");
+        this.digitalMin = (
+          +this.digitalMin +
+          Math.round(Math.abs(this.digitalHour) / 60 + 1) * 60 +
+          ''
+        ).padStart(2, '0')
+        this.digitalHour = (+this.digitalHour - 1 + '').padStart(2, '0')
       }
     },
     // 秒针格式化
-    formatSec() {
+    formatSec () {
       if (this.digitalSec >= 60) {
-        this.digitalSec = ((+this.digitalSec % 60) + "").padStart(2, "0");
-        this.digitalMin = (+this.digitalMin + 1 + "").padStart(2, "0");
+        this.digitalSec = ((+this.digitalSec % 60) + '').padStart(2, '0')
+        this.digitalMin = (+this.digitalMin + 1 + '').padStart(2, '0')
       } else if (this.digitalSec < 0) {
-        this.digitalSec = (+this.digitalSec + Math.round(Math.abs(this.digitalHour)/60+1)*60 + "").padStart(2, "0");
-        this.digitalMin = (+this.digitalMin - 1 + "").padStart(2, "0");
+        this.digitalSec = (
+          +this.digitalSec +
+          Math.round(Math.abs(this.digitalHour) / 60 + 1) * 60 +
+          ''
+        ).padStart(2, '0')
+        this.digitalMin = (+this.digitalMin - 1 + '').padStart(2, '0')
       }
     },
     // 时针点击+1
-    handlePlusHour() {
-      this.digitalHour = (+this.digitalHour + 1 + "").padStart(2, "0");
-      this.resetTimeDeg();
+    handlePlusHour () {
+      this.digitalHour = (+this.digitalHour + 1 + '').padStart(2, '0')
+      this.resetTimeDeg()
     },
     // 时针点击-1
-    handleSubHour() {
-      this.digitalHour = (+this.digitalHour - 1 + "").padStart(2, "0");
-      this.resetTimeDeg();
+    handleSubHour () {
+      this.digitalHour = (+this.digitalHour - 1 + '').padStart(2, '0')
+      this.resetTimeDeg()
     },
     // 分针点击+1
-    handlePlusMin() {
-      this.digitalMin = (+this.digitalMin + 1 + "").padStart(2, "0");
-      this.resetTimeDeg();
+    handlePlusMin () {
+      this.digitalMin = (+this.digitalMin + 1 + '').padStart(2, '0')
+      this.resetTimeDeg()
     },
     // 分针点击-1
-    handleSubMin() {
-      this.digitalMin = (+this.digitalMin - 1 + "").padStart(2, "0");
-      this.resetTimeDeg();
+    handleSubMin () {
+      this.digitalMin = (+this.digitalMin - 1 + '').padStart(2, '0')
+      this.resetTimeDeg()
     },
     // 秒针点击+1
-    handlePlusSec() {
-      this.digitalSec = (+this.digitalSec + 1 + "").padStart(2, "0");
-      this.resetTimeDeg();
+    handlePlusSec () {
+      this.digitalSec = (+this.digitalSec + 1 + '').padStart(2, '0')
+      this.resetTimeDeg()
     },
     // 秒针点击-1
-    handleSubSec() {
-      this.digitalSec = (+this.digitalSec - 1 + "").padStart(2, "0");
-      this.resetTimeDeg();
+    handleSubSec () {
+      this.digitalSec = (+this.digitalSec - 1 + '').padStart(2, '0')
+      this.resetTimeDeg()
     },
     // 拖拽时针改变电子表盘的digitalHour
-    setDigitalHour(deg) {
-      this.hourDeg = Math.round(this.hourDeg - deg);
+    setDigitalHour (deg) {
+      this.hourDeg = Math.round(this.hourDeg - deg)
       this.digitalHour = (
-        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ""
-      ).padStart(2, "0");
-      this.formatHour();
-      this.$forceUpdate();
+        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ''
+      ).padStart(2, '0')
+      this.formatHour()
+      this.$forceUpdate()
     },
     // 拖拽分针改变电子表盘的digitalMin
-    setDigitalMin(deg) {
-      this.minDeg = Math.round(this.minDeg - deg);
+    setDigitalMin (deg) {
+      this.minDeg = Math.round(this.minDeg - deg)
       this.digitalMin = (
-        Math.round((this.minDeg - +this.digitalSec / 10) / 6) + ""
-      ).padStart(2, "0");
+        Math.round((this.minDeg - +this.digitalSec / 10) / 6) + ''
+      ).padStart(2, '0')
       this.digitalHour = (
-        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ""
-      ).padStart(2, "0");
-      console.log(this.digitalMin);
-      this.formatHour();
-      this.formatMin();
-      this.$forceUpdate();
+        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ''
+      ).padStart(2, '0')
+      console.log(this.digitalMin)
+      this.formatHour()
+      this.formatMin()
+      this.$forceUpdate()
     },
     // 拖拽秒针改变电子表盘的digitalSec
-    setDigitalSec(deg) {
-      this.secDeg = Math.round(this.secDeg - deg);
-      this.digitalSec = (Math.round(this.secDeg / 6) + "").padStart(2, "0");
+    setDigitalSec (deg) {
+      this.secDeg = Math.round(this.secDeg - deg)
+      this.digitalSec = (Math.round(this.secDeg / 6) + '').padStart(2, '0')
       this.digitalMin = (
-        Math.round((this.minDeg - +this.digitalSec / 10) / 6) + ""
-      ).padStart(2, "0");
+        Math.round((this.minDeg - +this.digitalSec / 10) / 6) + ''
+      ).padStart(2, '0')
       this.digitalHour = (
-        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ""
-      ).padStart(2, "0");
-      this.formatHour();
-      this.formatMin();
-      this.formatSec();
-      this.$forceUpdate();
+        Math.round((this.hourDeg - +this.digitalMin / 2) / 30) + ''
+      ).padStart(2, '0')
+      this.formatHour()
+      this.formatMin()
+      this.formatSec()
+      this.$forceUpdate()
     },
     // 判断夜晚或白天模式
-    isMode() {
-      let numDh = +this.digitalHour;
+    isMode () {
+      const numDh = +this.digitalHour
       this.isNight =
-        (numDh >= 22 && numDh <= 23) || (numDh >= 0 && numDh <= 6)
-          ? true
-          : false;
+        !!((numDh >= 22 && numDh <= 23) || (numDh >= 0 && numDh <= 6))
     }
   },
   directives: {
     // 自定义指令 v-drag，el当前元素
-    drag(el, binding) {
+    drag (el, binding) {
       // pc端拖拽
-      el.onmousedown = function(e) {
-        //鼠标按下，计算当前元素距离client的距离
-        let disX = e.clientX - el.offsetLeft;
-        let disY = e.clientY - el.offsetTop;
-        let rect = e.target.getBoundingClientRect();
-        let centerX = rect.left + rect.width / 2;
-        let centerY = rect.top + rect.width / 2;
-        document.onmousemove = function(e) {
-          //鼠标移动，计算其移动距离
-          let l = e.clientX - centerX - disX;
-          let t = centerY - e.clientY - disY;
+      el.onmousedown = e => {
+        // 鼠标按下，计算当前元素距离client的距离
+        const disX = e.clientX - el.offsetLeft
+        const disY = e.clientY - el.offsetTop
+        const rect = e.target.getBoundingClientRect()
+        const centerX = rect.left + rect.width / 2
+        const centerY = rect.top + rect.width / 2
+        document.onmousemove = e => {
+          // 鼠标移动，计算其移动距离
+          const l = e.clientX - centerX - disX
+          const t = centerY - e.clientY - disY
           // 计算其旋转角度
-          let deg = (Math.atan2(t, l) / Math.PI) * 1.5;
+          const deg = (Math.atan2(t, l) / Math.PI) * 1.5
           // 旋转
-          el.style.transform = `rotateZ(${deg}deg)`;
+          el.style.transform = `rotateZ(${deg}deg)`
           // set传出deg给data
-          binding.value.set(deg);
-        };
-        document.onmouseup = function(e) {
-          document.onmousemove = null;
-          document.onmouseup = null;
-        };
-        //return false不加的话可能导致黏连，就是拖到一个地方时div粘在鼠标上不下来，相当于onmouseup失效
-        return false;
-      };
-      el.ontouchstart = function(e) {
-        //鼠标按下。计算当前元素距离可视区的距离
-        let disX = e.clientX - el.offsetLeft;
-        let disY = e.clientY - el.offsetTop;
-        let rect = e.target.getBoundingClientRect();
-        let centerX = rect.left + rect.width / 2;
-        let centerY = rect.top + rect.width / 2;
-        document.ontouchmove = function(e) {
-          //鼠标移动。计算鼠标移动距离
-          let l = e.clientX - centerX - disX;
-          let t = centerY - e.clientY - disY;
+          binding.value.set(deg)
+        }
+        document.onmouseup = e => {
+          document.onmousemove = null
+          document.onmouseup = null
+        }
+        return false
+      }
+      el.ontouchstart = e => {
+        // 鼠标按下。计算当前元素距离可视区的距离
+        const disX = e.clientX - el.offsetLeft
+        const disY = e.clientY - el.offsetTop
+        const rect = e.target.getBoundingClientRect()
+        const centerX = rect.left + rect.width / 2
+        const centerY = rect.top + rect.width / 2
+        document.ontouchmove = e => {
+          // 鼠标移动。计算鼠标移动距离
+          const l = e.clientX - centerX - disX
+          const t = centerY - e.clientY - disY
           // antan2计算出拖拽角度
-          let deg = (Math.atan2(t, l) / Math.PI) * 1.5;
+          const deg = (Math.atan2(t, l) / Math.PI) * 1.5
           // 拖拽旋转
-          el.style.transform = `rotateZ(${deg}deg)`;
+          el.style.transform = `rotateZ(${deg}deg)`
           // set传出deg
-          binding.value.set(deg);
-        };
-        document.ontouchend = function(e) {
-          document.ontouchmove = null;
-          document.ontouchend = null;
-        };
-        return false;
-      };
+          binding.value.set(deg)
+        }
+        document.ontouchend = e => {
+          document.ontouchmove = null
+          document.ontouchend = null
+        }
+        return false
+      }
     }
   }
-};
+}
+
 </script>
 
 <style lang="scss">
@@ -328,7 +336,7 @@ body {
   justify-content: center;
   align-items: center;
   padding: 1rem 3rem;
-  font-family:'Microsoft YaHei';
+  font-family: "Microsoft YaHei";
 }
 
 .container {
