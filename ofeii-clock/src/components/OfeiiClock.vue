@@ -270,15 +270,15 @@ export default {
       }
       el.ontouchstart = e => {
         // 鼠标按下。计算当前元素距离可视区的距离
-        const disX = e.clientX - el.offsetLeft
-        const disY = e.clientY - el.offsetTop
+        const disX = e.touches[0].clientX - el.offsetLeft
+        const disY = e.touches[0].clientY - el.offsetTop
         const rect = e.target.getBoundingClientRect()
         const centerX = rect.left + rect.width / 2
         const centerY = rect.top + rect.width / 2
         document.ontouchmove = e => {
           // 鼠标移动。计算鼠标移动距离
-          const l = e.clientX - centerX - disX
-          const t = centerY - e.clientY - disY
+          const l = e.touches[0].clientX - centerX - disX
+          const t = centerY - e.touches[0].clientY - disY
           // antan2计算出拖拽角度
           const deg = (Math.atan2(t, l) / Math.PI) * 1.5
           // 拖拽旋转
