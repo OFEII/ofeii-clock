@@ -272,7 +272,7 @@ export default {
         // 鼠标按下。计算当前元素距离可视区的距离
         const disX = e.touches[0].clientX - el.offsetLeft
         const disY = e.touches[0].clientY - el.offsetTop
-        const rect = e.target.touches[0].getBoundingClientRect()
+        const rect = e.target.getBoundingClientRect()
         const centerX = rect.left + rect.width / 2
         const centerY = rect.top + rect.width / 2
         document.ontouchmove = e => {
